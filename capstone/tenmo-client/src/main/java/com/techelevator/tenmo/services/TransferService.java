@@ -1,5 +1,7 @@
 package com.techelevator.tenmo.services;
 
+import com.techelevator.tenmo.model.Transfer;
+import com.techelevator.tenmo.model.TransferDTO;
 import com.techelevator.tenmo.model.User;
 import com.techelevator.util.BasicLogger;
 import org.springframework.http.HttpEntity;
@@ -28,10 +30,11 @@ public class TransferService {
         List<User> listOfUsers = new ArrayList<>();
 
         try {
-            usersArray = restTemplate.exchange(API_BASE_URL + "/tenmo_user", HttpMethod.GET,
+            usersArray = restTemplate.exchange(API_BASE_URL + "tenmo_user", HttpMethod.GET,
                     makeAuthEntity(), User[].class).getBody();
 
             for(User user : usersArray) {
+
                 listOfUsers.add(user);
             }
 
@@ -42,9 +45,35 @@ public class TransferService {
     }
 
 
+    public void completedTransfer(TransferDTO transferDTO) {
+        // POST to transfer table
+        // PUT to update both user's balance
+
+        try {
+            restTemplate.exchange(
+                    API_BASE_URL + "transfer",
+                    HttpMethod.POST,
+                    makeTransferEntity(transferDTO),
+                    Transfer.class
+            );
+            System.out.println("Transfer made! but account balance not updated YET");
+
+        } catch (RestClientResponseException | ResourceAccessException e) {
+            BasicLogger.log(e.getMessage());
+        }
+
+    }
+
+    public HttpEntity<TransferDTO> makeTransferEntity(TransferDTO transferDTO) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(authToken);
+        HttpEntity<TransferDTO> entity = new HttpEntity<>(transferDTO, headers);
+        return entity;
+    }
+
+
     private HttpEntity<Void> makeAuthEntity() {
         // only headers for GET
-
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(authToken);
         HttpEntity<Void> entity = new HttpEntity<>(headers);

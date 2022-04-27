@@ -1,6 +1,7 @@
 package com.techelevator.tenmo;
 
 import com.techelevator.tenmo.model.AuthenticatedUser;
+import com.techelevator.tenmo.model.TransferDTO;
 import com.techelevator.tenmo.model.UserCredentials;
 import com.techelevator.tenmo.services.AccountService;
 import com.techelevator.tenmo.services.AuthenticationService;
@@ -113,7 +114,50 @@ public class App {
 
 	private void sendBucks() {
         System.out.println(transferService.getUsers());
-		
+
+        // add checks on userID and amount
+        long userId;
+        BigDecimal amount;
+
+        boolean invalidUser = true;
+        do {
+            userId = consoleService.promptForInt("Select a user by ID:");
+            if (userId != currentUser.getUser().getId()) {
+                invalidUser = false;
+            } else {
+                System.out.println("Invalid selection. Try again.");
+            }
+
+        } while (invalidUser);
+
+
+        boolean invalidAmount = true;
+        do {
+            amount = consoleService.promptForBigDecimal("Enter the amount you wish to transfer:");
+            Long currentUserId = currentUser.getUser().getId();
+            BigDecimal currentUserBalance = accountService.getBalance(currentUserId);
+
+            if (amount.compareTo(currentUserBalance) == -1 || amount.compareTo(currentUserBalance) == 0) {
+                invalidAmount = false;
+            } else {
+                System.out.println("You cannot transfer that amount. Try again.");
+            }
+
+        } while (invalidAmount);
+
+        // start transfer here
+        TransferDTO transferDTO = new TransferDTO();
+        transferDTO.setTransferTypeId(2); // 2 = send
+        transferDTO.setTransferStatusId(2); // 2 = approved
+
+        // FIX!!! get account ID instead of user ID
+        transferDTO.setAccountFromId(currentUser.getUser().getId());
+        transferDTO.setAccountToId(userId);
+        // FIX!! ^^^^^^^^^
+        transferDTO.setTransferAmount(amount);
+
+        transferService.completedTransfer(transferDTO);
+        System.out.println("woo!");
 	}
 
 	private void requestBucks() {

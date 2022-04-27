@@ -13,8 +13,6 @@ public class Account {
         this.balance = new BigDecimal("1000.00");
     }
 
-    public long getAccountId() {
-
     public Long getAccountId() {
         return accountId;
     }

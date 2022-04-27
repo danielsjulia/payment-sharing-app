@@ -7,8 +7,8 @@ public class Transfer {
     private Long transferId;
     private int transferTypeId;
     private int transferStatusId;
-    private int accountFromId;
-    private int accountToId;
+    private Long accountFromId;
+    private Long accountToId;
     private BigDecimal transferAmount;
 
     public Long getTransferId() {
@@ -35,19 +35,19 @@ public class Transfer {
         this.transferStatusId = transferStatusId;
     }
 
-    public int getAccountFromId() {
+    public Long getAccountFromId() {
         return accountFromId;
     }
 
-    public void setAccountFromId(int accountFromId) {
+    public void setAccountFromId(Long accountFromId) {
         this.accountFromId = accountFromId;
     }
 
-    public int getAccountToId() {
+    public Long getAccountToId() {
         return accountToId;
     }
 
-    public void setAccountToId(int accountToId) {
+    public void setAccountToId(Long accountToId) {
         this.accountToId = accountToId;
     }
 

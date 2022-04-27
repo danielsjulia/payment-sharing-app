@@ -1,5 +1,7 @@
 package com.techelevator.tenmo.dao;
 
+import com.techelevator.tenmo.model.Transfer;
+import com.techelevator.tenmo.model.TransferDTO;
 import com.techelevator.tenmo.model.User;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -30,6 +32,29 @@ public class JdbcTransferDao implements TransferDao{
         return users;
     }
 
+    // insert transfer to table
+    public Transfer addTransfer(Transfer transfer) {
+        String sql = "INSERT INTO transfer (transfer_type_id, transfer_status_id, account_from, account_to, amount) " +
+                "VALUES (?, ?, ?, ?, ?) RETURNING transfer_id;";
+        long newTransferId = jdbcTemplate.queryForObject(sql, Long.class,
+                transfer.getTransferTypeId(), transfer.getTransferStatusId(), transfer.getAccountFromId(), transfer.getAccountToId(), transfer.getTransferAmount());
+
+        return getTransfer(newTransferId);
+    }
+
+    public Transfer getTransfer(Long transferId) {
+        String sql = "SELECT * FROM transfer WHERE transfer_id = ?";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, transferId);
+        Transfer transfer = new Transfer();
+
+        if (results.next()) {
+            transfer = mapRowToTransfer(results);
+        }
+
+        return transfer;
+    }
+
+
     @Override
     public User selectUser(Long id) {
         return null;
@@ -41,5 +66,20 @@ public class JdbcTransferDao implements TransferDao{
         user.setUsername(rs.getString("username"));
         return user;
     }
+
+    private Transfer mapRowToTransfer(SqlRowSet results) {
+        Transfer transfer = new Transfer();
+
+        transfer.setTransferId(results.getLong("transfer_id"));
+        transfer.setTransferTypeId(2); // 2 = send
+        transfer.setTransferStatusId(2); // 2 = approved
+        transfer.setAccountFromId(results.getLong("account_from"));
+        transfer.setAccountToId(results.getLong("account_to"));
+        transfer.setTransferAmount(results.getBigDecimal("amount"));
+
+        return transfer;
+    }
+
+
 
 }
