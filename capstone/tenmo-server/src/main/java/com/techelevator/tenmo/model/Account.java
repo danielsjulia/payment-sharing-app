@@ -8,23 +8,26 @@ public class Account {
     private Long userId;
     private BigDecimal balance;
 
+
     public Account() {
         this.balance = new BigDecimal("1000.00");
     }
 
     public long getAccountId() {
+
+    public Long getAccountId() {
         return accountId;
     }
 
-    public void setAccountId(long accountId) {
+    public void setAccountId(Long accountId) {
         this.accountId = accountId;
     }
 
-    public long getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 

@@ -62,6 +62,9 @@ public class App {
         UserCredentials credentials = consoleService.promptForCredentials();
         currentUser = authenticationService.login(credentials);
         accountService.setAuthToken(currentUser.getToken());
+
+        System.out.println("***DEBUG***");
+        System.out.println(currentUser.getToken());
         if (currentUser == null) {
             consoleService.printErrorMessage();
         }

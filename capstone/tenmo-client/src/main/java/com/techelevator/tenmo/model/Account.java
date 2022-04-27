@@ -8,6 +8,7 @@ public class Account {
     private Long userId;
     private BigDecimal balance;
 
+
     public long getAccountId() {
         return accountId;
     }
