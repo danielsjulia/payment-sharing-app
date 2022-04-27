@@ -5,6 +5,12 @@ public class User {
     private Long id;
     private String username;
 
+    @Override
+    public String toString() {
+        return "User id     Name\n" +
+                id + "     " + username + "\n";
+    }
+
     public Long getId() {
         return id;
     }
