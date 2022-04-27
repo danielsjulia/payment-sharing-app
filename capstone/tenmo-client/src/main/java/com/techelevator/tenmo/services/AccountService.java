@@ -19,26 +19,42 @@ public class AccountService {
 
     private String authToken = null;
 
-    private void setAuthToken(String authToken) {
+    public void setAuthToken(String authToken) {
         this.authToken = authToken;
     }
 
 
-    public BigDecimal getBalance(Long accountId) {
-        //BigDecimal balance = null;
+    public BigDecimal getBalance(Long id) {
+        Account account1 = null;
+        BigDecimal balance = null;
 
         try {
-            ResponseEntity<BigDecimal> balance = restTemplate.exchange(
-                    API_BASE_URL + "tenmo/account/" + accountId,
+            account1 = restTemplate.exchange(
+                    API_BASE_URL + "tenmo/account/" + id,
                     HttpMethod.GET,
-                    makeAccountEntity(),
+                    makeAuthEntity(),
                     Account.class
-            )
+            ).getBody();
+            balance = account1.getBalance();
 
         } catch (RestClientResponseException | ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
         }
+        return balance;
     }
+
+//        try {
+//            ResponseEntity<BigDecimal> balance = restTemplate.exchange(
+//                    API_BASE_URL + "tenmo/account/" + accountId,
+//                    HttpMethod.GET,
+//                    makeAccountEntity(),
+//                    Account.class
+//            ).getBody();
+//
+//        } catch (RestClientResponseException | ResourceAccessException e) {
+//            BasicLogger.log(e.getMessage());
+//        }
+//    }
 
 
     private HttpEntity<Account> makeAccountEntity(Account account) {
