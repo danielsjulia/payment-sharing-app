@@ -2,6 +2,7 @@ package com.techelevator.tenmo.controller;
 
 
 import com.techelevator.tenmo.dao.AccountDAO;
+import com.techelevator.tenmo.model.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,9 +19,9 @@ public class AppController {
     @Autowired
     AccountDAO accountDAO;
 
-    @RequestMapping(path="/account/{accountId}", method = RequestMethod.GET)
-    public BigDecimal getBalance(@PathVariable Long accountId) {
-        return accountDAO.getBalance(accountId);
+    @RequestMapping(path="/account/{id}", method = RequestMethod.GET)
+    public Account getBalance(@PathVariable Long id) {
+        return accountDAO.getBalance(id);
     }
 
     @RequestMapping(path = "")

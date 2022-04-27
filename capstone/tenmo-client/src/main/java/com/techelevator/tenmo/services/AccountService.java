@@ -5,7 +5,6 @@ import com.techelevator.util.BasicLogger;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
@@ -26,22 +25,32 @@ public class AccountService {
 
     public BigDecimal getBalance(Long id) {
         Account account1 = null;
-        BigDecimal balance = null;
+        BigDecimal balance;
+        account1 = getAccount(id);
+
+        balance = account1.getBalance();
+
+
+        return balance;
+    }
+
+    public Account getAccount(Long id) {
+        Account account1 = null;
 
         try {
             account1 = restTemplate.exchange(
-                    API_BASE_URL + "tenmo/account/" + id,
+                    API_BASE_URL + "account/" + id,
                     HttpMethod.GET,
                     makeAuthEntity(),
                     Account.class
             ).getBody();
-            balance = account1.getBalance();
 
         } catch (RestClientResponseException | ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
         }
-        return balance;
+        return account1;
     }
+
 
 //        try {
 //            ResponseEntity<BigDecimal> balance = restTemplate.exchange(
