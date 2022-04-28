@@ -13,5 +13,6 @@ public interface TransferDao {
 
     Transfer addTransfer(Transfer transfer);
     Transfer getTransfer(Long transferId);
+    List<Transfer> getAllTransfersByAccount(Long accountId);
 
 }

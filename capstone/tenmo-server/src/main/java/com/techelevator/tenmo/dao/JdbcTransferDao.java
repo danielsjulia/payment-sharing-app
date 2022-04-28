@@ -55,12 +55,15 @@ public class JdbcTransferDao implements TransferDao{
         return transfer;
     }
 
-    // *********FINISH THIS*********
-    public Transfer[] getAllTransfersByAccount() {
-        String sql = "SELECT * FROM transfer JOIN account ON transfer.account_from = account.account_id WHERE account.user_id = ?";
+    public List<Transfer> getAllTransfersByAccount(Long accountId) {
+        String sql = "SELECT * FROM transfer WHERE account_from = ?";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, accountId);
+        List<Transfer> transfers = new ArrayList<>();
 
-
-        return null;
+        while (results.next()) {
+            transfers.add(mapRowToTransfer(results));
+        }
+        return transfers;
     }
 
 

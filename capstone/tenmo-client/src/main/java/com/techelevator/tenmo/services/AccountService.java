@@ -43,8 +43,21 @@ public class AccountService {
         return balance;
     }
 
+    public Transfer getTransferDetails(Long transferId) {
+        Transfer transfer = null;
+        try{
+            transfer = restTemplate.exchange(API_BASE_URL + "transfer/" + transferId,
+                    HttpMethod.GET,
+                    makeAuthEntity(),
+                    Transfer.class
+            ).getBody();
+        } catch (RestClientResponseException | ResourceAccessException e) {
+            BasicLogger.log(e.getMessage());
+        }
+        return transfer;
+    }
 
-    // *********FINISH*********
+
     public List<Transfer> getPastTransfers() {
         List<Transfer> transfersList = new ArrayList<>();
         Transfer[] transfersArr = null;

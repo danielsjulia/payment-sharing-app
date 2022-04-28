@@ -1,6 +1,7 @@
 package com.techelevator.tenmo;
 
 import com.techelevator.tenmo.model.AuthenticatedUser;
+import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.TransferDTO;
 import com.techelevator.tenmo.model.UserCredentials;
 import com.techelevator.tenmo.services.AccountService;
@@ -9,6 +10,7 @@ import com.techelevator.tenmo.services.ConsoleService;
 import com.techelevator.tenmo.services.TransferService;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class App {
 
@@ -80,6 +82,7 @@ public class App {
                 viewCurrentBalance();
             } else if (menuSelection == 2) {
                 viewTransferHistory();
+                transferMenu();
             } else if (menuSelection == 3) {
                 viewPendingRequests();
             } else if (menuSelection == 4) {
@@ -101,9 +104,28 @@ public class App {
 	}
 
 	private void viewTransferHistory() {
-		// TODO Auto-generated method stub
-		
+		List<Transfer> transferHistory = accountService.getPastTransfers();
+        System.out.println(transferHistory);
 	}
+
+    private void transferMenu() {
+        int menuSelection = -1;
+        long transferId = -1;
+        while(menuSelection != 0) {
+            consoleService.printTransferMenu();
+            menuSelection = consoleService.promptForInt("Please choose an option: ");
+            if (menuSelection == 1) {
+                transferId = consoleService.promptForLong("Please enter Transfer ID number for details: ");
+                Transfer transferDetails = accountService.getTransferDetails(transferId);
+                System.out.println(transferDetails);
+            } else if (menuSelection == 0) {
+                continue;
+            } else {
+                System.out.println("Invalid Selection");
+            }
+            consoleService.pause();
+        }
+    }
 
 	private void viewPendingRequests() {
 		// TODO Auto-generated method stub

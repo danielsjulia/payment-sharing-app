@@ -62,12 +62,17 @@ public class AppController {
         return transferDao.addTransfer(transfer);
     }
 
-    // *********FINISH THIS*********
+    @RequestMapping(path = "/transfer/{transferId}", method = RequestMethod.GET)
+    public Transfer getTransferDetails(@PathVariable Long transferId) {
+        return transferDao.getTransfer(transferId);
+    }
+
     @RequestMapping(path = "/transfer", method = RequestMethod.GET)
-    public Transfer getTransferHistory() {
-        // get all transfers by accountId
-        // want transferID, usernames of From and To, amount for each
-        return null;
+    public List<Transfer> getTransferHistory(Principal principal) {
+        int userId = userDao.findIdByUsername(principal.getName());
+        long accountId = userDao.findAccountByUserId(userId);
+
+        return transferDao.getAllTransfersByAccount(accountId);
     }
 
     @RequestMapping(path = "")

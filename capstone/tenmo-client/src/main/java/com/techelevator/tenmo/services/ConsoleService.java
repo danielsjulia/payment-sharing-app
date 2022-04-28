@@ -46,6 +46,13 @@ public class ConsoleService {
         System.out.println();
     }
 
+    public void printTransferMenu() {
+        System.out.println();
+        System.out.println("1: View transfer details");
+        System.out.println("0: Return to main menu");
+        System.out.println();
+    }
+
     public UserCredentials promptForCredentials() {
         String username = promptForString("Username: ");
         String password = promptForString("Password: ");
@@ -62,6 +69,17 @@ public class ConsoleService {
         while (true) {
             try {
                 return Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a number.");
+            }
+        }
+    }
+
+    public long promptForLong(String prompt) {
+        System.out.println(prompt);
+        while (true) {
+            try {
+                return Long.parseLong(scanner.nextLine());
             } catch (NumberFormatException e) {
                 System.out.println("Please enter a number.");
             }
