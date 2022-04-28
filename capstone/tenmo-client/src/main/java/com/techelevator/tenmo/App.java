@@ -96,9 +96,7 @@ public class App {
     }
 
 	private void viewCurrentBalance() {
-        Long userId = currentUser.getUser().getId();
-
-        BigDecimal currentBalance = accountService.getBalance(userId);
+        BigDecimal currentBalance = accountService.getBalance();
         System.out.println(currentBalance);
 	}
 
@@ -135,7 +133,7 @@ public class App {
         do {
             amount = consoleService.promptForBigDecimal("Enter the amount you wish to transfer:");
             Long currentUserId = currentUser.getUser().getId();
-            BigDecimal currentUserBalance = accountService.getBalance(currentUserId);
+            BigDecimal currentUserBalance = accountService.getBalance();
 
             if (amount.compareTo(currentUserBalance) == -1 || amount.compareTo(currentUserBalance) == 0) {
                 invalidAmount = false;
@@ -147,13 +145,8 @@ public class App {
 
         // start transfer here
         TransferDTO transferDTO = new TransferDTO();
-        transferDTO.setTransferTypeId(2); // 2 = send
-        transferDTO.setTransferStatusId(2); // 2 = approved
-
-        // FIX!!! get account ID instead of user ID
-        transferDTO.setAccountFromId(currentUser.getUser().getId());
-        transferDTO.setAccountToId(userId);
-        // FIX!! ^^^^^^^^^
+        transferDTO.setUserFromId(currentUser.getUser().getId());
+        transferDTO.setUserToId(userId);
         transferDTO.setTransferAmount(amount);
 
         transferService.completedTransfer(transferDTO);

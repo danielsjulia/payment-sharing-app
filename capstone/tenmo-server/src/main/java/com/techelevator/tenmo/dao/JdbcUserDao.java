@@ -45,6 +45,17 @@ public class JdbcUserDao implements UserDao {
         return users;
     }
 
+    public long findAccountByUserId(long userId) {
+        String sql = "SELECT account_id FROM account JOIN tenmo_user " +
+                "ON account.user_id = tenmo_user.user_id WHERE account.user_id = ?;";
+        Long id = jdbcTemplate.queryForObject(sql, Long.class, userId);
+        if (id != null) {
+            return id;
+        } else {
+            return -1;
+        }
+    }
+
     @Override
     public User findByUsername(String username) throws UsernameNotFoundException {
         String sql = "SELECT user_id, username, password_hash FROM tenmo_user WHERE username ILIKE ?;";

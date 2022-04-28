@@ -3,6 +3,7 @@ package com.techelevator.tenmo.controller;
 
 import com.techelevator.tenmo.dao.AccountDAO;
 import com.techelevator.tenmo.dao.TransferDao;
+import com.techelevator.tenmo.dao.UserDao;
 import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.TransferDTO;
 import com.techelevator.tenmo.model.User;
@@ -11,7 +12,6 @@ import com.techelevator.tenmo.model.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.List;
 
@@ -25,14 +25,27 @@ public class AppController {
     @Autowired
     TransferDao transferDao;
 
+    // autowire user dao to connect principal to user id
+    @Autowired
+    UserDao userDao;
+
 //    @RequestMapping(path="/account/{accountId}", method = RequestMethod.GET)
 //    public BigDecimal getBalance(@PathVariable Long accountId) {
 //        return accountDAO.getBalance(accountId);
 
-    @RequestMapping(path="/account/{id}", method = RequestMethod.GET)
-    public Account getBalance(@PathVariable Long id) {
-        return accountDAO.getBalance(id);
+    // get balance using principal
+    // changes for client side: change path;
+    @RequestMapping(path="/balance", method = RequestMethod.GET)
+    public Account getBalance(Principal principal) {
+        principal.getName();
+        int userId = userDao.findIdByUsername(principal.getName());
+        return accountDAO.getBalance((long)userId);
     }
+
+//    @RequestMapping(path="/account/{id}", method = RequestMethod.GET)
+//    public Account getBalance(@PathVariable Long id) {
+//        return accountDAO.getBalance(id);
+//    }
 
     @RequestMapping(path="/tenmo_user", method = RequestMethod.GET)
     public List<User> getUsers() {
@@ -57,8 +70,8 @@ public class AppController {
 
         transfer.setTransferTypeId(2); // 2 = send
         transfer.setTransferStatusId(2); // 2 = approved
-        transfer.setAccountFromId(transferDTO.getAccountFromId());
-        transfer.setAccountToId(transferDTO.getAccountToId());
+        transfer.setAccountFromId(userDao.findAccountByUserId(transferDTO.getUserFromId()));
+        transfer.setAccountToId(userDao.findAccountByUserId(transferDTO.getUserToId()));
         transfer.setTransferAmount(transferDTO.getTransferAmount());
 
         return transfer;

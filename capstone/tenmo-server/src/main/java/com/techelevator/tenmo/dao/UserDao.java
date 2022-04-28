@@ -8,6 +8,8 @@ public interface UserDao {
 
     List<User> findAll();
 
+    long findAccountByUserId(long userId);
+
     User findByUsername(String username);
 
     int findIdByUsername(String username);

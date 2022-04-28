@@ -23,33 +23,41 @@ public class AccountService {
     }
 
 
-    public BigDecimal getBalance(Long id) {
-        Account account1 = null;
-        BigDecimal balance;
-        account1 = getAccount(id);
-
-        balance = account1.getBalance();
-
-
-        return balance;
-    }
-
-    public Account getAccount(Long id) {
-        Account account1 = null;
-
+    public BigDecimal getBalance() {
+        Account account = null;
+        BigDecimal balance = null;
         try {
-            account1 = restTemplate.exchange(
-                    API_BASE_URL + "account/" + id,
+            account = restTemplate.exchange(
+                    API_BASE_URL + "balance",
                     HttpMethod.GET,
                     makeAuthEntity(),
                     Account.class
             ).getBody();
+            balance = account.getBalance();
 
         } catch (RestClientResponseException | ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
         }
-        return account1;
+        return balance;
     }
+
+
+//    public Account getAccount() {
+//        Account account1 = null;
+//
+//        try {
+//            account1 = restTemplate.exchange(
+//                    API_BASE_URL + "balance",
+//                    HttpMethod.GET,
+//                    makeAuthEntity(),
+//                    Account.class
+//            ).getBody();
+//
+//        } catch (RestClientResponseException | ResourceAccessException e) {
+//            BasicLogger.log(e.getMessage());
+//        }
+//        return account1;
+//    }
 
 
     private HttpEntity<Account> makeAccountEntity(Account account) {
