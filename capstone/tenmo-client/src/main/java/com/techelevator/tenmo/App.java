@@ -135,7 +135,9 @@ public class App {
             Long currentUserId = currentUser.getUser().getId();
             BigDecimal currentUserBalance = accountService.getBalance();
 
-            if (amount.compareTo(currentUserBalance) == -1 || amount.compareTo(currentUserBalance) == 0) {
+            //|| amount.compareTo(currentUserBalance) == 0
+
+            if (amount.compareTo(new BigDecimal("0.0")) > 0 && amount.compareTo(currentUserBalance) <= 0) {
                 invalidAmount = false;
             } else {
                 System.out.println("You cannot transfer that amount. Try again.");

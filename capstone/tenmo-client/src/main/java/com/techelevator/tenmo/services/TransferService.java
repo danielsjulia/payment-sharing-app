@@ -45,23 +45,26 @@ public class TransferService {
     }
 
 
-    public void completedTransfer(TransferDTO transferDTO) {
+    public Transfer completedTransfer(TransferDTO transferDTO) {
         // POST to transfer table
         // PUT to update both user's balance
+        // save to transfer object
+        Transfer newTransfer = null;
 
         try {
-            restTemplate.exchange(
+            newTransfer = restTemplate.exchange(
                     API_BASE_URL + "transfer",
                     HttpMethod.POST,
                     makeTransferEntity(transferDTO),
                     Transfer.class
-            );
-            System.out.println("Transfer made! but account balance not updated YET");
+            ).getBody();
+            System.out.println("Transfer made!");
+            System.out.println(newTransfer);
 
         } catch (RestClientResponseException | ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
         }
-
+        return newTransfer;
     }
 
     public HttpEntity<TransferDTO> makeTransferEntity(TransferDTO transferDTO) {

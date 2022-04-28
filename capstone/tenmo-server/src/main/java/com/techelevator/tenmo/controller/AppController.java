@@ -56,7 +56,18 @@ public class AppController {
     public Transfer makeTransfer(@RequestBody TransferDTO transferDTO) {
         Transfer transfer = mapDTOToTransfer(transferDTO);
 
+        // update accounts
+        accountDAO.transferBalance(transfer);
+
         return transferDao.addTransfer(transfer);
+    }
+
+    // *********FINISH THIS*********
+    @RequestMapping(path = "/transfer", method = RequestMethod.GET)
+    public Transfer getTransferHistory() {
+        // get all transfers by accountId
+        // want transferID, usernames of From and To, amount for each
+        return null;
     }
 
     @RequestMapping(path = "")

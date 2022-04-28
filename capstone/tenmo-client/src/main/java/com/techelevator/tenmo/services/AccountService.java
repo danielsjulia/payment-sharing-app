@@ -1,6 +1,7 @@
 package com.techelevator.tenmo.services;
 
 import com.techelevator.tenmo.model.Account;
+import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.util.BasicLogger;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -10,6 +11,8 @@ import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AccountService {
 
@@ -21,7 +24,6 @@ public class AccountService {
     public void setAuthToken(String authToken) {
         this.authToken = authToken;
     }
-
 
     public BigDecimal getBalance() {
         Account account = null;
@@ -39,6 +41,34 @@ public class AccountService {
             BasicLogger.log(e.getMessage());
         }
         return balance;
+    }
+
+
+    // *********FINISH*********
+    public List<Transfer> getPastTransfers() {
+        List<Transfer> transfersList = new ArrayList<>();
+        Transfer[] transfersArr = null;
+
+
+        try {
+            transfersArr = restTemplate.exchange(
+                    API_BASE_URL + "/transfer",
+                    HttpMethod.GET,
+                    makeAuthEntity(),
+                    Transfer[].class
+            ).getBody();
+
+            if (transfersArr != null) {
+                for (Transfer transfer : transfersArr) {
+                    transfersList.add(transfer);
+                }
+            }
+
+        } catch (RestClientResponseException | ResourceAccessException e) {
+            BasicLogger.log(e.getMessage());
+        }
+
+        return transfersList;
     }
 
 
@@ -69,7 +99,6 @@ public class AccountService {
 
     private HttpEntity<Void> makeAuthEntity() {
         // only headers for GET
-
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(authToken);
         HttpEntity<Void> entity = new HttpEntity<>(headers);

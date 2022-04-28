@@ -1,6 +1,9 @@
 package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.model.Account;
+import com.techelevator.tenmo.model.Transfer;
+import com.techelevator.tenmo.model.TransferDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
@@ -12,6 +15,7 @@ import java.math.BigDecimal;
 public class JdbcAccountDAO implements AccountDAO{
 
     private JdbcTemplate jdbcTemplate;
+    private UserDao userDao;
 
     public JdbcAccountDAO(DataSource ds) {
         this.jdbcTemplate = new JdbcTemplate(ds);
@@ -31,14 +35,34 @@ public class JdbcAccountDAO implements AccountDAO{
         return account;
     }
 
+    public void transferBalance(Transfer transfer) {
+        // set up account info
+        long fromAccount = transfer.getAccountFromId();
+        long fromUser = getUserId(fromAccount);
+        BigDecimal fromNewBalance = getBalance(fromUser).getBalance().subtract(transfer.getTransferAmount());
+
+        long toAccount = transfer.getAccountToId();
+        long toUser = getUserId(toAccount);
+        BigDecimal toNewBalance = getBalance(toUser).getBalance().add(transfer.getTransferAmount());
+
+        // update accounts
+        String sql = "UPDATE account SET balance = ? WHERE account_id = ?;";
+        jdbcTemplate.update(sql, fromNewBalance, fromAccount);
+        jdbcTemplate.update(sql, toNewBalance, toAccount);
+
+    }
+
     @Override
-    public Long getAccountId() {
+    public Long getAccountId(long userId) {
         return null;
     }
 
     @Override
-    public Long getUserId() {
-        return null;
+    public Long getUserId(long accountId) {
+        String sql = "SELECT user_id FROM account WHERE account_id = ?;";
+        long userId = jdbcTemplate.queryForObject(sql, Long.class, accountId);
+
+        return userId;
     }
 
     public Account accountObjectMapper(SqlRowSet results) {

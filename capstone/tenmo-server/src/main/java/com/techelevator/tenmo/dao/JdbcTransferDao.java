@@ -34,6 +34,7 @@ public class JdbcTransferDao implements TransferDao{
 
     // insert transfer to table
     public Transfer addTransfer(Transfer transfer) {
+
         String sql = "INSERT INTO transfer (transfer_type_id, transfer_status_id, account_from, account_to, amount) " +
                 "VALUES (?, ?, ?, ?, ?) RETURNING transfer_id;";
         long newTransferId = jdbcTemplate.queryForObject(sql, Long.class,
@@ -52,6 +53,14 @@ public class JdbcTransferDao implements TransferDao{
         }
 
         return transfer;
+    }
+
+    // *********FINISH THIS*********
+    public Transfer[] getAllTransfersByAccount() {
+        String sql = "SELECT * FROM transfer JOIN account ON transfer.account_from = account.account_id WHERE account.user_id = ?";
+
+
+        return null;
     }
 
 
@@ -79,6 +88,7 @@ public class JdbcTransferDao implements TransferDao{
 
         return transfer;
     }
+
 
 
 
