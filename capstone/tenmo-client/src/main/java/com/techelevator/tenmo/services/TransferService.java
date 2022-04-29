@@ -58,24 +58,6 @@ public class TransferService {
         return false;
     }
 
-//    public User getUser(long userId) {
-//
-//        User user = null;
-//
-//        try {
-//            user = restTemplate.exchange(
-//                    API_BASE_URL + "",
-//                    HttpMethod.GET,
-//                    makeAuthEntity(),
-//                    User.class).getBody();
-//
-//        } catch (RestClientResponseException | ResourceAccessException e) {
-//            BasicLogger.log(e.getMessage());
-//        }
-//
-//        return user;
-//    }
-
 
     public Transfer completedTransfer(TransferDTO transferDTO) {
         // POST to transfer table

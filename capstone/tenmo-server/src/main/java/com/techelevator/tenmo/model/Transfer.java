@@ -11,6 +11,7 @@ public class Transfer {
     private Long accountToId;
     private BigDecimal transferAmount;
 
+
     public Long getTransferId() {
         return transferId;
     }

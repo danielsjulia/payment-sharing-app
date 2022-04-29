@@ -3,12 +3,10 @@ package com.techelevator.tenmo.controller;
 
 import com.techelevator.tenmo.dao.AccountDAO;
 import com.techelevator.tenmo.dao.TransferDao;
+import com.techelevator.tenmo.dao.TransferDetailsDao;
 import com.techelevator.tenmo.dao.UserDao;
-import com.techelevator.tenmo.model.Transfer;
-import com.techelevator.tenmo.model.TransferDTO;
-import com.techelevator.tenmo.model.User;
+import com.techelevator.tenmo.model.*;
 
-import com.techelevator.tenmo.model.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +23,9 @@ public class AppController {
 
     @Autowired
     TransferDao transferDao;
+
+    @Autowired
+    TransferDetailsDao transferDetailsDao;
 
     // autowire user dao to connect principal to user id
     @Autowired
@@ -55,17 +56,30 @@ public class AppController {
         return transferDao.addTransfer(transfer);
     }
 
+//    @RequestMapping(path = "/transfer/{transferId}", method = RequestMethod.GET)
+//    public Transfer getTransferDetails(@PathVariable Long transferId) {
+//        return transferDao.getTransfer(transferId);
+//    }
+//
+//    @RequestMapping(path = "/transfer", method = RequestMethod.GET)
+//    public List<Transfer> getTransferHistory(Principal principal) {
+//        int userId = userDao.findIdByUsername(principal.getName());
+//        long accountId = userDao.findAccountByUserId(userId);
+//
+//        return transferDao.getAllTransfersByAccount(accountId);
+//    }
+
     @RequestMapping(path = "/transfer/{transferId}", method = RequestMethod.GET)
-    public Transfer getTransferDetails(@PathVariable Long transferId) {
-        return transferDao.getTransfer(transferId);
+    public TransferDetails getTransferDetails(@PathVariable Long transferId) {
+        return transferDetailsDao.getTransferDetails(transferId);
     }
 
-    @RequestMapping(path = "/transfer", method = RequestMethod.GET)
-    public List<Transfer> getTransferHistory(Principal principal) {
+    @RequestMapping(path = "/transfer/history", method = RequestMethod.GET)
+    public List<TransferDetails> getTransferHistory(Principal principal) {
         int userId = userDao.findIdByUsername(principal.getName());
         long accountId = userDao.findAccountByUserId(userId);
 
-        return transferDao.getAllTransfersByAccount(accountId);
+        return transferDetailsDao.getTransferHistory(accountId);
     }
 
     @RequestMapping(path = "")

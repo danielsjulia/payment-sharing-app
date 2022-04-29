@@ -1,9 +1,12 @@
 package com.techelevator.tenmo.services;
 
 
+import com.techelevator.tenmo.model.Transfer;
+import com.techelevator.tenmo.model.TransferDetails;
 import com.techelevator.tenmo.model.UserCredentials;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Scanner;
 
 public class ConsoleService {
@@ -50,6 +53,29 @@ public class ConsoleService {
         System.out.println();
         System.out.println("1: View transfer details");
         System.out.println("0: Return to main menu");
+        System.out.println();
+    }
+
+    public void printTransferHistory(List<TransferDetails> transferList) {
+        System.out.println("--------------------------------------------");
+        System.out.println("ID                 To                 Amount");
+        System.out.println("--------------------------------------------");
+        for (TransferDetails transfer : transferList) {
+            System.out.println(transfer.getTransferId() + "               To: " + transfer.getAccountToUsername() + "          $" + transfer.getTransferAmount());
+        }
+        System.out.println();
+    }
+
+    public void printTransferDetails(TransferDetails transfer, String username) {
+        System.out.println("--------------------------------------------");
+        System.out.println("Transfer Details");
+        System.out.println("--------------------------------------------");
+        System.out.println("Id: " + transfer.getTransferId());
+        System.out.println("From: " + username);
+        System.out.println("To: " + transfer.getAccountToUsername());
+        System.out.println("Type: " + transfer.getTransferTypeDescription());
+        System.out.println("Status: " + transfer.getTransferStatus());
+        System.out.println("Amount: $" + transfer.getTransferAmount());
         System.out.println();
     }
 

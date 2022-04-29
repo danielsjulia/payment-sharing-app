@@ -100,8 +100,8 @@ public class App {
 	}
 
 	private void viewTransferHistory() {
-		List<Transfer> transferHistory = accountService.getPastTransfers();
-        System.out.println(transferHistory);
+		List<TransferDetails> transferHistory = accountService.getPastTransfers();
+        consoleService.printTransferHistory(transferHistory);
 	}
 
     private void transferMenu() {
@@ -112,8 +112,9 @@ public class App {
             menuSelection = consoleService.promptForInt("Please choose an option: ");
             if (menuSelection == 1) {
                 transferId = consoleService.promptForLong("Please enter Transfer ID number for details: ");
-                Transfer transferDetails = accountService.getTransferDetails(transferId);
-                System.out.println(transferDetails);
+                TransferDetails transferDetails = accountService.getTransferDetails(transferId);
+                String username = currentUser.getUser().getUsername();
+                consoleService.printTransferDetails(transferDetails, username);
             } else if (menuSelection == 0) {
                 continue;
             } else {

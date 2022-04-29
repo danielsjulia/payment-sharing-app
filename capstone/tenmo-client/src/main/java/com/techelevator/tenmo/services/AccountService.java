@@ -2,6 +2,7 @@ package com.techelevator.tenmo.services;
 
 import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transfer;
+import com.techelevator.tenmo.model.TransferDetails;
 import com.techelevator.util.BasicLogger;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -43,37 +44,37 @@ public class AccountService {
         return balance;
     }
 
-    public Transfer getTransferDetails(Long transferId) {
-        Transfer transfer = null;
+    public TransferDetails getTransferDetails(Long transferId) {
+        TransferDetails transferDetails = null;
         try{
-            transfer = restTemplate.exchange(API_BASE_URL + "transfer/" + transferId,
+            transferDetails = restTemplate.exchange(API_BASE_URL + "transfer/" + transferId,
                     HttpMethod.GET,
                     makeAuthEntity(),
-                    Transfer.class
+                    TransferDetails.class
             ).getBody();
         } catch (RestClientResponseException | ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
         }
-        return transfer;
+        return transferDetails;
     }
 
 
-    public List<Transfer> getPastTransfers() {
-        List<Transfer> transfersList = new ArrayList<>();
-        Transfer[] transfersArr = null;
+    public List<TransferDetails> getPastTransfers() {
+        List<TransferDetails> transferHistory = new ArrayList<>();
+        TransferDetails[] transfersArr = null;
 
 
         try {
             transfersArr = restTemplate.exchange(
-                    API_BASE_URL + "/transfer",
+                    API_BASE_URL + "/transfer/history",
                     HttpMethod.GET,
                     makeAuthEntity(),
-                    Transfer[].class
+                    TransferDetails[].class
             ).getBody();
 
             if (transfersArr != null) {
-                for (Transfer transfer : transfersArr) {
-                    transfersList.add(transfer);
+                for (TransferDetails transferDetails : transfersArr) {
+                    transferHistory.add(transferDetails);
                 }
             }
 
@@ -81,7 +82,7 @@ public class AccountService {
             BasicLogger.log(e.getMessage());
         }
 
-        return transfersList;
+        return transferHistory;
     }
 
 
