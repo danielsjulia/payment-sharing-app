@@ -4,6 +4,7 @@ import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.TransferDTO;
 import com.techelevator.tenmo.model.User;
 import com.techelevator.util.BasicLogger;
+import org.apiguardian.api.API;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -33,7 +34,7 @@ public class TransferService {
             usersArray = restTemplate.exchange(API_BASE_URL + "tenmo_user", HttpMethod.GET,
                     makeAuthEntity(), User[].class).getBody();
 
-            for(User user : usersArray) {
+            for (User user : usersArray) {
 
                 listOfUsers.add(user);
             }
@@ -43,6 +44,37 @@ public class TransferService {
         }
         return listOfUsers;
     }
+
+    public boolean containsUser(long userId) {
+        List<User> userList;
+
+        userList = getUsers();
+
+        for (User user : userList) {
+            if (user.getId().equals(userId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+//    public User getUser(long userId) {
+//
+//        User user = null;
+//
+//        try {
+//            user = restTemplate.exchange(
+//                    API_BASE_URL + "",
+//                    HttpMethod.GET,
+//                    makeAuthEntity(),
+//                    User.class).getBody();
+//
+//        } catch (RestClientResponseException | ResourceAccessException e) {
+//            BasicLogger.log(e.getMessage());
+//        }
+//
+//        return user;
+//    }
 
 
     public Transfer completedTransfer(TransferDTO transferDTO) {

@@ -1,13 +1,8 @@
 package com.techelevator.tenmo;
 
-import com.techelevator.tenmo.model.AuthenticatedUser;
-import com.techelevator.tenmo.model.Transfer;
-import com.techelevator.tenmo.model.TransferDTO;
-import com.techelevator.tenmo.model.UserCredentials;
-import com.techelevator.tenmo.services.AccountService;
-import com.techelevator.tenmo.services.AuthenticationService;
-import com.techelevator.tenmo.services.ConsoleService;
-import com.techelevator.tenmo.services.TransferService;
+import com.techelevator.tenmo.model.*;
+import com.techelevator.tenmo.services.*;
+import com.techelevator.util.BasicLogger;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -65,6 +60,7 @@ public class App {
         UserCredentials credentials = consoleService.promptForCredentials();
         currentUser = authenticationService.login(credentials);
         accountService.setAuthToken(currentUser.getToken());
+        transferService.setAuthToken(currentUser.getToken());
 
         System.out.println("***DEBUG***");
         System.out.println(currentUser.getToken());
@@ -100,7 +96,7 @@ public class App {
 
 	private void viewCurrentBalance() {
         BigDecimal currentBalance = accountService.getBalance();
-        System.out.println(currentBalance);
+        System.out.println("Your current account balance is: $" + currentBalance);
 	}
 
 	private void viewTransferHistory() {
@@ -133,6 +129,7 @@ public class App {
 	}
 
 	private void sendBucks() {
+
         System.out.println(transferService.getUsers());
 
         // add checks on userID and amount
@@ -142,7 +139,8 @@ public class App {
         boolean invalidUser = true;
         do {
             userId = consoleService.promptForInt("Select a user by ID:");
-            if (userId != currentUser.getUser().getId()) {
+
+            if (userId != currentUser.getUser().getId() && transferService.containsUser(userId)) {
                 invalidUser = false;
             } else {
                 System.out.println("Invalid selection. Try again.");

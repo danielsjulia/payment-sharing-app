@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -25,6 +26,7 @@ import org.springframework.web.server.ResponseStatusException;
 /**
  * Controller to authenticate users.
  */
+@PreAuthorize("isAuthenticated()")
 @RestController
 public class AuthenticationController {
 
@@ -38,6 +40,7 @@ public class AuthenticationController {
         this.userDao = userDao;
     }
 
+    @PreAuthorize("permitAll")
     @ApiOperation("Authenticates the user with the given username and password")
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public LoginResponse login(@Valid @RequestBody @ApiParam("username and password")LoginDTO loginDto) {
@@ -54,6 +57,7 @@ public class AuthenticationController {
         return new LoginResponse(jwt, user);
     }
 
+    @PreAuthorize("permitAll")
     @ApiOperation("Registers a new user")
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(value = "/register", method = RequestMethod.POST)
