@@ -1,5 +1,8 @@
 package com.techelevator.tenmo.model;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 
 public class TransferDTO {

@@ -63,7 +63,6 @@ public class AccountService {
         List<TransferDetails> transferHistory = new ArrayList<>();
         TransferDetails[] transfersArr = null;
 
-
         try {
             transfersArr = restTemplate.exchange(
                     API_BASE_URL + "/transfer/history",
@@ -81,9 +80,22 @@ public class AccountService {
         } catch (RestClientResponseException | ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
         }
-
         return transferHistory;
     }
+
+    public boolean containsTransfer(long transferId) {
+        List<TransferDetails> transferList;
+
+        transferList = getPastTransfers();
+
+        for (TransferDetails transferDetails : transferList) {
+            if (transferDetails.getTransferId().equals(transferId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
 
 //    public Account getAccount() {

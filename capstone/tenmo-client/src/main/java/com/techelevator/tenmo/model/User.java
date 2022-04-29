@@ -7,8 +7,8 @@ public class User {
 
     @Override
     public String toString() {
-        return "User id     Name\n" +
-                id + "     " + username + "\n";
+        return id + "                 " + username;
+
     }
 
     public Long getId() {

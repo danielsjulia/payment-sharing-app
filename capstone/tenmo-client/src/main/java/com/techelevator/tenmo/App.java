@@ -59,11 +59,10 @@ public class App {
     private void handleLogin() {
         UserCredentials credentials = consoleService.promptForCredentials();
         currentUser = authenticationService.login(credentials);
+
         accountService.setAuthToken(currentUser.getToken());
         transferService.setAuthToken(currentUser.getToken());
 
-        System.out.println("***DEBUG***");
-        System.out.println(currentUser.getToken());
         if (currentUser == null) {
             consoleService.printErrorMessage();
         }
@@ -111,10 +110,25 @@ public class App {
             consoleService.printTransferMenu();
             menuSelection = consoleService.promptForInt("Please choose an option: ");
             if (menuSelection == 1) {
-                transferId = consoleService.promptForLong("Please enter Transfer ID number for details: ");
-                TransferDetails transferDetails = accountService.getTransferDetails(transferId);
-                String username = currentUser.getUser().getUsername();
-                consoleService.printTransferDetails(transferDetails, username);
+
+                boolean invalidTransferId = true;
+                do {
+                    transferId = consoleService.promptForLong("Please enter Transfer ID number for details: ");
+
+                    if (accountService.containsTransfer(transferId)) {
+
+                        TransferDetails transferDetails = accountService.getTransferDetails(transferId);
+                        String username = currentUser.getUser().getUsername();
+                        consoleService.printTransferDetails(transferDetails, username);
+
+                        invalidTransferId = false;
+
+                    } else {
+                        System.out.println("Invalid selection. Try again");
+                    }
+
+                } while (invalidTransferId);
+
             } else if (menuSelection == 0) {
                 continue;
             } else {
@@ -131,7 +145,7 @@ public class App {
 
 	private void sendBucks() {
 
-        System.out.println(transferService.getUsers());
+        consoleService.printUsers(transferService.getUsers());
 
         // add checks on userID and amount
         long userId;
@@ -173,7 +187,8 @@ public class App {
         transferDTO.setTransferAmount(amount);
 
         transferService.completedTransfer(transferDTO);
-        System.out.println("woo!");
+        System.out.println();
+        System.out.println("Transfer completed. Woo!");
 	}
 
 	private void requestBucks() {

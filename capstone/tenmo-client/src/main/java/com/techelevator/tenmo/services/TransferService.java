@@ -35,7 +35,6 @@ public class TransferService {
                     makeAuthEntity(), User[].class).getBody();
 
             for (User user : usersArray) {
-
                 listOfUsers.add(user);
             }
 
@@ -72,8 +71,6 @@ public class TransferService {
                     makeTransferEntity(transferDTO),
                     Transfer.class
             ).getBody();
-            System.out.println("Transfer made!");
-            System.out.println(newTransfer);
 
         } catch (RestClientResponseException | ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
