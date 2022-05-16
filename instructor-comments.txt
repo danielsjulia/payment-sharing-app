@@ -1,0 +1,9 @@
+Good job, some minor issues -
+
+- Some cleanup needed, there is commented out code. On the AppController I don't think userIdentity() is needed.
+
+- When sending money to someone, you should exclude yourself from the list.
+
+- The functionality to check whether or not there is enough balance to make a transfer should be on the server
+side. Ideally, you send in the request regardless and the server will check the balance and throw an exception
+if there is insufficient money. The client can then handle the exception.
